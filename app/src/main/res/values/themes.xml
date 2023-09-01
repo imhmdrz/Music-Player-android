@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.MusicPlayer" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.MusicPlayer" parent="Base.Theme.MusicPlayer" />
+    <style name="customSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="minHeight">2dp</item>
+        <item name="maxHeight">4dp</item>
+    </style>
+</resources>
