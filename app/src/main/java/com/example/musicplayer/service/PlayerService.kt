@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.musicplayer.MainActivity
@@ -31,11 +32,15 @@ class PlayerService : Service() {
     companion object {
         var isStarted = false
     }
+
     lateinit var currentPlayer: Player
+
     lateinit var playerNotificationManager: PlayerNotificationManager
     private val binder: IBinder = PlayerServiceBinder()
+
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
+
     private var isForegroundService = false
     private val audioAttributes = AudioAttributes.Builder()
         .setContentType(C.CONTENT_TYPE_MUSIC)
@@ -66,13 +71,14 @@ class PlayerService : Service() {
                 .setChannelImportance(IMPORTANCE_HIGH)
                 .setSmallIconResourceId(R.drawable.baseline_music_note_24)
                 .setChannelDescriptionResourceId(R.string.app_name)
-                .setChannelNameResourceId(R.string.app_name).build()
+                .setChannelNameResourceId(R.string.app_name)
+                .build()
         playerNotificationManager.apply {
             setPlayer(currentPlayer)
             setPriority(NotificationCompat.PRIORITY_MAX)
             setUseRewindAction(false)
             setUseFastForwardAction(false)
-            setColor(ContextCompat.getColor(this@PlayerService, R.color.purple_200))
+            setColorized(false)
         }
     }
     private inner class PlayerNotificationListener :

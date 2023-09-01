@@ -29,8 +29,6 @@ class SongViewModel(context: Context, private val dataStore: DataStore<Preferenc
     val repeatMode get() = _repeatMode  //0 for for repeat one, 1 for repeat all , 2 for shuffle
 
     lateinit var player: ExoPlayer
-    private var _firstTime: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    val firstTime get() = _firstTime
 
     init {
         _song.value = Repository.getAllDeviceSongs(context)

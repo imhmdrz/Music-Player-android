@@ -45,8 +45,6 @@ class PlayerListener(
                 error(R.drawable.baseline_music_note_24)
             }
         }
-
-
     }
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)

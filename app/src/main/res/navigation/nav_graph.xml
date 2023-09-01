@@ -14,7 +14,8 @@
             android:id="@+id/action_mainFragment_to_playerFragment"
             app:destination="@id/playerFragment"
             app:enterAnim="@anim/from_bottom"
-            app:popEnterAnim="@anim/from_bottom"
+            app:exitAnim="@anim/to_up"
+            app:popEnterAnim="@anim/from_up"
             app:popExitAnim="@anim/to_bottom" />
     </fragment>
     <fragment

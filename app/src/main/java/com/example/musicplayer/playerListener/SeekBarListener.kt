@@ -12,7 +12,6 @@ class SeekBarListener(private var binding: FragmentPlayerBinding, private val pl
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         progressVal = progress
     }
-
     override fun onStartTrackingTouch(seekBar: SeekBar?) {}
     override fun onStopTrackingTouch(seekBar: SeekBar?) {
         if (player.playbackState == Player.STATE_READY) {

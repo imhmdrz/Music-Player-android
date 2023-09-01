@@ -69,7 +69,6 @@ class RvAdapter(private val context: Context, private var viewModel: SongViewMod
         holder.itemView.setOnClickListener {
             playMusic(position)
             navController = Navigation.findNavController(it)
-            viewModel.firstTime.value = false
             context.startService(Intent(context.applicationContext, PlayerService::class.java))
             PlayerService.isStarted = true
         }

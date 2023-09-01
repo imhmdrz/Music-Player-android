@@ -62,17 +62,21 @@ class MainFragment : Fragment() {
             requireActivity(),
             Injection.provideSongViewModelFactory(requireActivity(), requireActivity().dataStore)
         ).get(SongViewModel::class.java)
-//        if(PlayerService.isStarted){
-//            if (viewModel.player.isPlaying) {
-//                binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
-//            } else {
-//                binding.playPauseBtn.setIconResource(R.drawable.ic_play_circle)
-//            }
-//        }
+        playAndPause()
         bindService()
         bindRV()
         bindNavigation()
         bindBTN()
+    }
+
+    private fun playAndPause() {
+        if (PlayerService.isStarted && binder != null) {
+            if (binder!!.getService().currentPlayer.isPlaying) {
+                binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
+            } else {
+                binding.playPauseBtn.setIconResource(R.drawable.ic_play_circle)
+            }
+        }
     }
 
     private fun bindNavigation() {
@@ -139,12 +143,8 @@ class MainFragment : Fragment() {
                 }
             }
         }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-        }
+        override fun onServiceDisconnected(name: ComponentName?) {}
     }
-
-
     private fun bindBTN() {
         binding.prevBtn.setOnClickListener {
             if (viewModel.player.hasPreviousMediaItem()) {
