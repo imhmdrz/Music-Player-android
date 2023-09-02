@@ -31,6 +31,7 @@ import com.example.musicplayer.service.PlayerService
 import com.example.musicplayer.viewModel.Injection
 import com.example.musicplayer.viewModel.SongViewModel
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.coroutines.launch
 
@@ -55,8 +56,20 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             checkReadStoragePermissions()
+            while (ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_MEDIA_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+            }
         }else{
             checkReadStoragePermissionsForOlderVersions()
+            while (ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+            }
         }
         viewModel = ViewModelProvider(
             requireActivity(),

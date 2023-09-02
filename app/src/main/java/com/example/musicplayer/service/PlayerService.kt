@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.musicplayer.MainActivity
 import com.example.musicplayer.R
+import com.example.musicplayer.utils.uriToBitmap
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -31,6 +32,8 @@ import java.io.InputStream
 class PlayerService : Service() {
     companion object {
         var isStarted = false
+        private const val channelId = "Music Channel"
+        private const val notificationId = 111
     }
 
     lateinit var currentPlayer: Player
@@ -62,17 +65,7 @@ class PlayerService : Service() {
         currentPlayer = ExoPlayer.Builder(applicationContext).build()
         (currentPlayer as ExoPlayer).setAudioAttributes(audioAttributes, true)
         (currentPlayer as ExoPlayer).setHandleAudioBecomingNoisy(true)
-        val channelId = "Music Channel"
-        val notificationId = 111
-        playerNotificationManager =
-            PlayerNotificationManager.Builder(this, notificationId, channelId)
-                .setMediaDescriptionAdapter(adapter)
-                .setNotificationListener(PlayerNotificationListener())
-                .setChannelImportance(IMPORTANCE_HIGH)
-                .setSmallIconResourceId(R.drawable.baseline_music_note_24)
-                .setChannelDescriptionResourceId(R.string.app_name)
-                .setChannelNameResourceId(R.string.app_name)
-                .build()
+        playerNotificationManager = playerNotificationManager()
         playerNotificationManager.apply {
             setPlayer(currentPlayer)
             setPriority(NotificationCompat.PRIORITY_MAX)
@@ -81,6 +74,17 @@ class PlayerService : Service() {
             setColorized(false)
         }
     }
+
+    private fun playerNotificationManager() =
+        PlayerNotificationManager.Builder(this, notificationId, channelId)
+            .setMediaDescriptionAdapter(adapter)
+            .setNotificationListener(PlayerNotificationListener())
+            .setChannelImportance(IMPORTANCE_HIGH)
+            .setSmallIconResourceId(R.drawable.baseline_music_note_24)
+            .setChannelDescriptionResourceId(R.string.app_name)
+            .setChannelNameResourceId(R.string.app_name)
+            .build()
+
     private inner class PlayerNotificationListener :
         PlayerNotificationManager.NotificationListener {
         override fun onNotificationPosted(
@@ -94,7 +98,6 @@ class PlayerService : Service() {
                 isForegroundService = true
             }
         }
-
         override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
             stopForeground(STOP_FOREGROUND_DETACH)
             if (currentPlayer.isPlaying) {
@@ -139,19 +142,6 @@ class PlayerService : Service() {
                 }
             }
         }
-    fun uriToBitmap(contentResolver: ContentResolver, uri: Uri): Bitmap? {
-        var inputStream: InputStream? = null
-        try {
-            inputStream = contentResolver.openInputStream(uri)
-            return BitmapFactory.decodeStream(inputStream)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            inputStream?.close()
-        }
-        return null
-    }
-
     override fun onDestroy() {
         if (currentPlayer.isPlaying) {
             currentPlayer.stop()
@@ -163,5 +153,4 @@ class PlayerService : Service() {
         isStarted = false
         super.onDestroy()
     }
-
 }
