@@ -23,17 +23,6 @@ class MainListener(
             }
         }
     }
-
-    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-        super.onPlayWhenReadyChanged(playWhenReady, reason)
-        binding.apply {
-            if (viewModel.player.isPlaying) {
-                playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
-            } else {
-                playPauseBtn.setIconResource(R.drawable.ic_play_circle)
-            }
-        }
-    }
     override fun onPlaybackStateChanged(playbackState: Int) {
         super.onPlaybackStateChanged(playbackState)
         if (playbackState == ExoPlayer.STATE_READY) {

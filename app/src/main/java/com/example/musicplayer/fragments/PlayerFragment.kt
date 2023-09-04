@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.example.musicplayer.R
-import com.example.musicplayer.dataStore.dataStore
 import com.example.musicplayer.databinding.FragmentPlayerBinding
 import com.example.musicplayer.playerListener.PlayerListener
 import com.example.musicplayer.playerListener.SeekBarListener
@@ -38,7 +37,7 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
             requireActivity(),
-            Injection.provideSongViewModelFactory(requireActivity(), requireActivity().dataStore)
+            Injection.provideSongViewModelFactory(requireActivity())
         ).get(SongViewModel::class.java)
         bindBtn()
         bindPlayer()

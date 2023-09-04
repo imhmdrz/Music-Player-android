@@ -18,22 +18,19 @@ object Repository {
     private const val ARTIST_ID = 5
     private const val ARTIST = 6
     private val BASE_PROJECTION = arrayOf(
-        MediaStore.Audio.Media._ID,//0
-        MediaStore.Audio.AudioColumns.TITLE,//1
-        MediaStore.Audio.AudioColumns.DURATION,//2
-        MediaStore.Audio.Media.ALBUM_ID,//3
-        MediaStore.Audio.AudioColumns.ALBUM,//4
-        MediaStore.Audio.AudioColumns.ARTIST_ID,//5
-        MediaStore.Audio.AudioColumns.ARTIST,//6
+        MediaStore.Audio.Media._ID,
+        MediaStore.Audio.AudioColumns.TITLE,
+        MediaStore.Audio.AudioColumns.DURATION,
+        MediaStore.Audio.Media.ALBUM_ID,
+        MediaStore.Audio.AudioColumns.ALBUM,
+        MediaStore.Audio.AudioColumns.ARTIST_ID,
+        MediaStore.Audio.AudioColumns.ARTIST,
     )
     private val mAllDeviceSongs = ArrayList<Song>()
-
     fun getAllDeviceSongs(context: Context): MutableList<Song> {
         val cursor = makeSongCursor(context)
         return getSongs(cursor)
     }
-
-
     private fun getSongs(cursor: Cursor?): MutableList<Song> {
         val songs = ArrayList<Song>()
         if (cursor != null && cursor.moveToFirst()) {
@@ -51,8 +48,6 @@ object Repository {
 
         return songs
     }
-
-
     private fun getSongFromCursorImpl(cursor: Cursor): Song {
         val id = cursor.getLong(ID)
         val title = cursor.getString(TITLE)
@@ -66,7 +61,6 @@ object Repository {
             Uri.parse("content://media/external/audio/albumart"),
             albumId
         )
-
         val albumName = cursor.getString(ALBUM)
         val artistId = cursor.getInt(ARTIST_ID)
         val artistName = cursor.getString(ARTIST)
@@ -81,7 +75,6 @@ object Repository {
             artistName
         )
     }
-
     private fun makeSongCursor(context: Context): Cursor? {
         return try {
             context.contentResolver.query(
@@ -91,6 +84,5 @@ object Repository {
         } catch (e: SecurityException) {
             null
         }
-
     }
 }

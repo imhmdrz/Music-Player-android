@@ -7,12 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class SongViewModelFactory (
-    private val context: Context,
-    private val dataStore: DataStore<Preferences>
+    private val context: Context
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SongViewModel::class.java)) {
-            return SongViewModel(context,dataStore) as T
+            return SongViewModel(context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

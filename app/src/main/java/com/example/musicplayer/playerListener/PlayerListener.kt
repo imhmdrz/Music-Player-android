@@ -6,6 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentPlayerBinding
+import com.example.musicplayer.utils.readableTime
 import com.example.musicplayer.viewModel.SongViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -18,16 +19,6 @@ class PlayerListener(
     private var binding: FragmentPlayerBinding,
     var viewModel: SongViewModel
 ) : Player.Listener {
-    private fun readableTime(dur: Long): String {
-        val hrs = dur / (1000 * 60 * 60)
-        val min = (dur % (1000 * 60 * 60)) / (1000 * 60)
-        val sec = (((dur % (1000 * 60 * 60)) % (1000 * 60 * 60)) % (1000 * 60)) / 1000
-        return if (hrs < 1) {
-            ("$min:$sec")
-        } else {
-            ("$hrs:$min:$sec")
-        }
-    }
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         super.onMediaItemTransition(mediaItem, reason)
         binding.apply {

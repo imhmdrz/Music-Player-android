@@ -22,8 +22,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
 
-class RvAdapter(private val context: Context, private var viewModel: SongViewModel , val binding: FragmentMainBinding) : ListAdapter<Song, RvAdapter.SongViewHolder>(DiffCallback) {
-    var navController: NavController? = null
+class RvAdapter(private val context: Context, private var viewModel: SongViewModel, private val binding: FragmentMainBinding) : ListAdapter<Song, RvAdapter.SongViewHolder>(DiffCallback) {
     class SongViewHolder(
         private val binding: SongItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -69,12 +68,11 @@ class RvAdapter(private val context: Context, private var viewModel: SongViewMod
         holder.bind(song)
         holder.itemView.setOnClickListener {
             playMusic(position)
-            navController = Navigation.findNavController(it)
             context.startService(Intent(context.applicationContext, PlayerService::class.java))
             PlayerService.isStarted = true
         }
     }
-    private fun playMusic(position: Int) {
+    fun playMusic(position: Int) {
         if (!viewModel.player.isPlaying) {
             viewModel.player.setMediaItems(getMusic(), position, 0)
         } else {

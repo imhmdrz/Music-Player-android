@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,7 +24,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicplayer.R
 import com.example.musicplayer.adapter.RvAdapter
-import com.example.musicplayer.dataStore.dataStore
 import com.example.musicplayer.databinding.FragmentMainBinding
 import com.example.musicplayer.playerListener.MainListener
 import com.example.musicplayer.service.PlayerService
@@ -62,7 +60,7 @@ class MainFragment : Fragment() {
         }
         viewModel = ViewModelProvider(
             requireActivity(),
-            Injection.provideSongViewModelFactory(requireActivity(), requireActivity().dataStore)
+            Injection.provideSongViewModelFactory(requireActivity())
         ).get(SongViewModel::class.java)
         playAndPause()
         bindService()
@@ -87,7 +85,7 @@ class MainFragment : Fragment() {
             if (PlayerService.isStarted) {
                 findNavController().navigate(R.id.action_mainFragment_to_playerFragment)
             } else {
-                Toast.makeText(requireContext(), "No song is playing", Toast.LENGTH_SHORT).show()
+                Snackbar.make(requireView() , "No song is playing" , Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -162,6 +160,11 @@ class MainFragment : Fragment() {
             }
         }
         binding.playPauseBtn.setOnClickListener {
+            if(!PlayerService.isStarted){
+                rvAdapter.playMusic(0)
+                requireActivity().startService(Intent(requireActivity().applicationContext, PlayerService::class.java))
+                PlayerService.isStarted = true
+            }
             if (viewModel.player.isPlaying) {
                 viewModel.player.pause()
                 binding.playPauseBtn.setIconResource(R.drawable.ic_play_circle)

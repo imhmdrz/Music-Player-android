@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 
 object Injection {
     fun provideSongViewModelFactory(
-        context: Context,
-        dataStore: DataStore<Preferences>
+        context: Context
     ): ViewModelProvider.Factory {
-        return SongViewModelFactory(context,dataStore)
+        return SongViewModelFactory(context)
     }
 }

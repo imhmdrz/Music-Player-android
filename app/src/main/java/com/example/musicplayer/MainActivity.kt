@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.example.musicplayer.dataStore.dataStore
 import com.example.musicplayer.databinding.ActivityMainBinding
 import com.example.musicplayer.viewModel.Injection
 import com.example.musicplayer.viewModel.SongViewModel
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 ViewModelProvider(
                     this,
-                    Injection.provideSongViewModelFactory(this, this.dataStore)
+                    Injection.provideSongViewModelFactory(this)
                 ).get(SongViewModel::class.java).refreshSong(this)
             }
         }
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 ViewModelProvider(
                     this,
-                    Injection.provideSongViewModelFactory(this, this.dataStore)
+                    Injection.provideSongViewModelFactory(this)
                 ).get(SongViewModel::class.java).refreshSong(this)
             }
         }
