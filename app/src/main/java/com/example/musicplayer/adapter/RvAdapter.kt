@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.musicplayer.R
+import com.example.musicplayer.databinding.FragmentMainBinding
 import com.example.musicplayer.databinding.SongItemBinding
 import com.example.musicplayer.model.Song
 import com.example.musicplayer.service.PlayerService
@@ -21,7 +22,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
 
-class RvAdapter(private val context: Context, private var viewModel: SongViewModel) : ListAdapter<Song, RvAdapter.SongViewHolder>(DiffCallback) {
+class RvAdapter(private val context: Context, private var viewModel: SongViewModel , val binding: FragmentMainBinding) : ListAdapter<Song, RvAdapter.SongViewHolder>(DiffCallback) {
     var navController: NavController? = null
     class SongViewHolder(
         private val binding: SongItemBinding
@@ -82,6 +83,7 @@ class RvAdapter(private val context: Context, private var viewModel: SongViewMod
         }
         viewModel.player.prepare()
         viewModel.player.play()
+        binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
     }
 
     private fun getMusic(): MutableList<MediaItem> {

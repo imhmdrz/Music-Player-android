@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -56,20 +57,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
             checkReadStoragePermissions()
-            while (ContextCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.READ_MEDIA_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-            }
         }else{
             checkReadStoragePermissionsForOlderVersions()
-            while (ContextCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-            }
         }
         viewModel = ViewModelProvider(
             requireActivity(),
@@ -83,6 +72,7 @@ class MainFragment : Fragment() {
     }
 
     private fun playAndPause() {
+        Log.d("TAG", "playAndPause:  ${PlayerService.isStarted}   ${binder != null}")
         if (PlayerService.isStarted && binder != null) {
             if (binder!!.getService().currentPlayer.isPlaying) {
                 binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
@@ -162,21 +152,13 @@ class MainFragment : Fragment() {
         binding.prevBtn.setOnClickListener {
             if (viewModel.player.hasPreviousMediaItem()) {
                 viewModel.player.seekToPrevious()
-                if (viewModel.player.isPlaying) {
-                    binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
-                } else {
-                    binding.playPauseBtn.setIconResource(R.drawable.ic_play_circle)
-                }
+                binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
             }
         }
         binding.nextBtn.setOnClickListener {
             if (viewModel.player.hasNextMediaItem()) {
                 viewModel.player.seekToNext()
-                if (viewModel.player.isPlaying) {
-                    binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
-                } else {
-                    binding.playPauseBtn.setIconResource(R.drawable.ic_play_circle)
-                }
+                binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
             }
         }
         binding.playPauseBtn.setOnClickListener {
@@ -192,7 +174,7 @@ class MainFragment : Fragment() {
 
 
     private fun bindRV() {
-        rvAdapter = RvAdapter(requireActivity(), viewModel)
+        rvAdapter = RvAdapter(requireActivity(), viewModel , binding)
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerview.setHasFixedSize(true)
         val animatorAdapter = ScaleInAnimationAdapter(rvAdapter)

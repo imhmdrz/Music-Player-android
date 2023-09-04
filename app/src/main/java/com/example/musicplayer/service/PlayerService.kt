@@ -4,14 +4,11 @@ package com.example.musicplayer.service
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.support.v4.media.session.MediaSessionCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.example.musicplayer.MainActivity
@@ -27,7 +24,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.io.InputStream
 
 class PlayerService : Service() {
     companion object {
@@ -38,7 +34,7 @@ class PlayerService : Service() {
 
     lateinit var currentPlayer: Player
 
-    lateinit var playerNotificationManager: PlayerNotificationManager
+    private lateinit var playerNotificationManager: PlayerNotificationManager
     private val binder: IBinder = PlayerServiceBinder()
 
     private val serviceJob = SupervisorJob()

@@ -33,6 +33,9 @@ class SongViewModel(context: Context, private val dataStore: DataStore<Preferenc
     init {
         _song.value = Repository.getAllDeviceSongs(context)
     }
+    fun refreshSong(context: Context){
+        _song.value = Repository.getAllDeviceSongs(context)
+    }
 
     override fun onCleared() {
         if (!player.isPlaying) {
