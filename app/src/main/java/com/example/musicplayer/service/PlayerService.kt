@@ -31,16 +31,13 @@ class PlayerService : Service() {
         private const val channelId = "Music Channel"
         private const val notificationId = 111
     }
-
     lateinit var currentPlayer: Player
-
     private lateinit var playerNotificationManager: PlayerNotificationManager
     private val binder: IBinder = PlayerServiceBinder()
-
     private val serviceJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
-
     private var isForegroundService = false
+
     private val audioAttributes = AudioAttributes.Builder()
         .setContentType(C.CONTENT_TYPE_MUSIC)
         .setUsage(C.USAGE_MEDIA)

@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,8 +43,7 @@ class MainFragment : Fragment() {
     private lateinit var rvAdapter: RvAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         return binding.root
@@ -53,14 +51,13 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkReadStoragePermissions()
-        }else{
+        } else {
             checkReadStoragePermissionsForOlderVersions()
         }
         viewModel = ViewModelProvider(
-            requireActivity(),
-            Injection.provideSongViewModelFactory(requireActivity())
+            requireActivity(), Injection.provideSongViewModelFactory(requireActivity())
         ).get(SongViewModel::class.java)
         playAndPause()
         bindService()
@@ -70,8 +67,8 @@ class MainFragment : Fragment() {
     }
 
     private fun playAndPause() {
-        Log.d("TAG", "playAndPause:  ${PlayerService.isStarted}   ${binder != null}")
         if (PlayerService.isStarted && binder != null) {
+            viewModel.player.addListener(MainListener(binding, viewModel))
             if (binder!!.getService().currentPlayer.isPlaying) {
                 binding.playPauseBtn.setIconResource(R.drawable.ic_pause_circle)
             } else {
@@ -85,7 +82,7 @@ class MainFragment : Fragment() {
             if (PlayerService.isStarted) {
                 findNavController().navigate(R.id.action_mainFragment_to_playerFragment)
             } else {
-                Snackbar.make(requireView() , "No song is playing" , Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), "No song is playing", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -93,34 +90,32 @@ class MainFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun checkReadStoragePermissions() {
         if (ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.READ_MEDIA_AUDIO
+                requireActivity(), Manifest.permission.READ_MEDIA_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.POST_NOTIFICATIONS),
-                2
+                requireActivity(), arrayOf(
+                    Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.POST_NOTIFICATIONS
+                ), 2
             )
         }
     }
+
     private fun checkReadStoragePermissionsForOlderVersions() {
         if (ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                1
+                requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1
             )
         }
     }
+
     private fun bindService() {
         lifecycleScope.launch {
-            viewModel.shouldBeClear.collect{
-                if(it){
+            viewModel.shouldBeClear.collect {
+                if (it) {
                     requireActivity().unbindService(playerServiceConnection)
                     val intent = Intent(requireActivity(), PlayerService::class.java)
                     requireActivity().stopService(intent)
@@ -144,8 +139,10 @@ class MainFragment : Fragment() {
                 }
             }
         }
+
         override fun onServiceDisconnected(name: ComponentName?) {}
     }
+
     private fun bindBTN() {
         binding.prevBtn.setOnClickListener {
             if (viewModel.player.hasPreviousMediaItem()) {
@@ -160,9 +157,13 @@ class MainFragment : Fragment() {
             }
         }
         binding.playPauseBtn.setOnClickListener {
-            if(!PlayerService.isStarted){
+            if (!PlayerService.isStarted) {
                 rvAdapter.playMusic(0)
-                requireActivity().startService(Intent(requireActivity().applicationContext, PlayerService::class.java))
+                requireActivity().startService(
+                    Intent(
+                        requireActivity().applicationContext, PlayerService::class.java
+                    )
+                )
                 PlayerService.isStarted = true
             }
             if (viewModel.player.isPlaying) {
@@ -177,7 +178,7 @@ class MainFragment : Fragment() {
 
 
     private fun bindRV() {
-        rvAdapter = RvAdapter(requireActivity(), viewModel , binding)
+        rvAdapter = RvAdapter(requireActivity(), viewModel)
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerview.setHasFixedSize(true)
         val animatorAdapter = ScaleInAnimationAdapter(rvAdapter)
@@ -194,7 +195,7 @@ class MainFragment : Fragment() {
 
     override fun onDestroy() {
         _binding = null
-        if(binder != null){
+        if (binder != null) {
             doUnbindService()
         }
         super.onDestroy()

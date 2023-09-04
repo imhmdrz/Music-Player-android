@@ -3,11 +3,9 @@ package com.example.musicplayer.playerListener
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentMainBinding
 import com.example.musicplayer.viewModel.SongViewModel
-import com.google.android.exoplayer2.DeviceInfo
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import java.util.Objects
 
 class MainListener(
     private var binding: FragmentMainBinding,

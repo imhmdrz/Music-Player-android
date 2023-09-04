@@ -19,7 +19,6 @@ import com.example.musicplayer.viewModel.SongViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.Objects
 
 class PlayerFragment : Fragment() {
     private lateinit var viewModel: SongViewModel
@@ -32,7 +31,6 @@ class PlayerFragment : Fragment() {
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
@@ -41,11 +39,12 @@ class PlayerFragment : Fragment() {
         ).get(SongViewModel::class.java)
         bindBtn()
         bindPlayer()
+        addListeners()
+    }
+    private fun addListeners() {
         binding.seekBar.setOnSeekBarChangeListener(SeekBarListener(binding, viewModel.player))
         viewModel.player.addListener(PlayerListener(binding, viewModel))
     }
-
-
     private fun bindPlayer() {
         binding.apply {
             bindShuffle()
@@ -60,7 +59,7 @@ class PlayerFragment : Fragment() {
             } else {
                 playPauseBtn.setIconResource(R.drawable.ic_play_circle)
             }
-            albumPhotoPlayer.load(Objects.requireNonNull(viewModel.player.currentMediaItem?.mediaMetadata?.artworkUri)) {
+            albumPhotoPlayer.load(viewModel.player.currentMediaItem?.mediaMetadata?.artworkUri) {
                 placeholder(R.drawable.baseline_music_note_24)
                 error(R.drawable.baseline_music_note_24)
             }
@@ -80,15 +79,14 @@ class PlayerFragment : Fragment() {
             titleArtist.isSelected = true
         }
     }
-
     private fun FragmentPlayerBinding.bindShuffle() {
         if(viewModel.player.repeatMode == ExoPlayer.REPEAT_MODE_ONE){
             viewModel.player.shuffleModeEnabled = false
             shuffle.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.baseline_repeat_one_24,
                 0, 0, 0
-            )}
-
+            )
+        }
         if(viewModel.player.repeatMode == ExoPlayer.REPEAT_MODE_ALL && !viewModel.player.shuffleModeEnabled) {
             shuffle.setCompoundDrawablesWithIntrinsicBounds(
                 R.drawable.baseline_repeat_24,
@@ -100,40 +98,6 @@ class PlayerFragment : Fragment() {
                 R.drawable.baseline_shuffle_24,
                 0, 0, 0
             )
-        }
-    }
-
-    private fun FragmentPlayerBinding.shuffle() {
-        when (viewModel.repeatMode) {
-            0 -> {
-                viewModel.player.repeatMode = ExoPlayer.REPEAT_MODE_ONE
-                viewModel.player.shuffleModeEnabled = false
-                viewModel.setRepeatMode(1)
-                shuffle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.baseline_repeat_one_24,
-                    0, 0, 0
-                )
-            }
-
-            1 -> {
-                viewModel.player.repeatMode = ExoPlayer.REPEAT_MODE_ALL
-                viewModel.player.shuffleModeEnabled = false
-                viewModel.setRepeatMode(2)
-                shuffle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.baseline_repeat_24,
-                    0, 0, 0
-                )
-            }
-
-            2 -> {
-                viewModel.player.repeatMode = ExoPlayer.REPEAT_MODE_ALL
-                viewModel.player.shuffleModeEnabled = true
-                viewModel.setRepeatMode(0)
-                shuffle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.baseline_shuffle_24,
-                    0, 0, 0
-                )
-            }
         }
     }
 
@@ -164,7 +128,37 @@ class PlayerFragment : Fragment() {
             }
         }
     }
-
+    private fun FragmentPlayerBinding.shuffle() {
+        when (viewModel.repeatMode) {
+            0 -> {
+                viewModel.player.repeatMode = ExoPlayer.REPEAT_MODE_ONE
+                viewModel.player.shuffleModeEnabled = false
+                viewModel.setRepeatMode(1)
+                shuffle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.baseline_repeat_one_24,
+                    0, 0, 0
+                )
+            }
+            1 -> {
+                viewModel.player.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+                viewModel.player.shuffleModeEnabled = false
+                viewModel.setRepeatMode(2)
+                shuffle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.baseline_repeat_24,
+                    0, 0, 0
+                )
+            }
+            2 -> {
+                viewModel.player.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+                viewModel.player.shuffleModeEnabled = true
+                viewModel.setRepeatMode(0)
+                shuffle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.baseline_shuffle_24,
+                    0, 0, 0
+                )
+            }
+        }
+    }
     override fun onDestroy() {
         _binding = null
         super.onDestroy()

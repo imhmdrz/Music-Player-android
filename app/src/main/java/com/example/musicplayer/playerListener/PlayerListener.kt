@@ -1,8 +1,5 @@
 package com.example.musicplayer.playerListener
 
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.example.musicplayer.R
 import com.example.musicplayer.databinding.FragmentPlayerBinding
@@ -11,13 +8,9 @@ import com.example.musicplayer.viewModel.SongViewModel
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.util.Objects
 
 class PlayerListener(
-    private var binding: FragmentPlayerBinding,
-    var viewModel: SongViewModel
+    private var binding: FragmentPlayerBinding, var viewModel: SongViewModel
 ) : Player.Listener {
     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
         super.onMediaItemTransition(mediaItem, reason)

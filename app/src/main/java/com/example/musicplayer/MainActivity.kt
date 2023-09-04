@@ -1,7 +1,5 @@
 package com.example.musicplayer
 
-
-
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
@@ -13,19 +11,16 @@ import com.example.musicplayer.databinding.ActivityMainBinding
 import com.example.musicplayer.viewModel.Injection
 import com.example.musicplayer.viewModel.SongViewModel
 
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
-
     }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
@@ -42,10 +37,7 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }else{
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                ViewModelProvider(
-                    this,
-                    Injection.provideSongViewModelFactory(this)
-                ).get(SongViewModel::class.java).refreshSong(this)
+                refreshListWhenPermissionGranted()
             }
         }
         if(requestCode == 1){
@@ -54,11 +46,14 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }else{
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-                ViewModelProvider(
-                    this,
-                    Injection.provideSongViewModelFactory(this)
-                ).get(SongViewModel::class.java).refreshSong(this)
+                refreshListWhenPermissionGranted()
             }
         }
+    }
+    private fun refreshListWhenPermissionGranted() {
+        ViewModelProvider(
+            this,
+            Injection.provideSongViewModelFactory(this)
+        ).get(SongViewModel::class.java).refreshSong(this)
     }
 }

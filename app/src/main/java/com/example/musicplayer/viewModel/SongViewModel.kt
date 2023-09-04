@@ -2,21 +2,11 @@ package com.example.musicplayer.viewModel
 
 
 import android.content.Context
-import android.content.Intent
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
 import androidx.lifecycle.ViewModel
 import com.example.musicplayer.model.Song
 import com.example.musicplayer.repository.Repository
-import com.example.musicplayer.service.PlayerService
 import com.google.android.exoplayer2.ExoPlayer
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import java.io.IOException
 
 class SongViewModel(context: Context) :
     ViewModel() {
